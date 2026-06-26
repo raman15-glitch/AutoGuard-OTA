@@ -41,7 +41,10 @@ jobs:
 
     - name: Compile C++ Edge Client
       run: |
-        cd client/build
+        cd client
+        mkdir -p build
+        cd build
+        cmake ..
         make
 
     - name: Run Integration Tests
