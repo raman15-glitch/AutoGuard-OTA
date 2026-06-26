@@ -8,7 +8,12 @@ find_package(Protobuf REQUIRED)
 find_package(gRPC REQUIRED)
 find_package(OpenSSL REQUIRED)
 # Define the executable
-add_executable(ota_client src/main.cpp)
+add_executable(ota_client 
+    src/main.cpp 
+    src/partition_manager.cpp
+    ${hw_grpc_srcs} 
+    ${hw_proto_srcs}
+)
 
 # Setup Protobuf/gRPC generation
 get_filename_component(ota_proto "../proto/ota.proto" ABSOLUTE)
@@ -41,4 +46,9 @@ target_link_libraries(ota_client PRIVATE
   gRPC::grpc++
   OpenSSL::SSL
   OpenSSL::Crypto
+)
+
+add_executable(test_partition 
+    src/test_partition.cpp 
+    src/partition_manager.cpp
 )
