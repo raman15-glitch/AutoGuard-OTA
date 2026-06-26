@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package ota;
+
+// The Service Definition
+service FirmwareUpdateService {
+  rpc CheckForUpdate (UpdateRequest) returns (UpdateResponse);
+  rpc DownloadUpdate (DownloadRequest) returns (stream FileChunk);
+}
+
+message UpdateRequest {
+  string device_id = 1;        
+  string current_version = 2;  
+}
+
+message UpdateResponse {
+  bool update_available = 1;
+  string new_version = 2;
+  string release_notes = 3;
+  string firmware_sha256 = 4; // Security Critical
+  string firmware_signature = 5; // Security Critical
+  
+  enum Severity {
+    OPTIONAL = 0;
+    CRITICAL = 1; 
+  }
+  Severity severity = 6;
+}
+
+message DownloadRequest {
+  string device_id = 1;
+  string version_requested = 2;
+  uint64 resume_offset = 3;
+}
+
+message FileChunk {
+  bytes data = 1;             
+  int32 chunk_index = 2;      
+}

@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  cloud-server:
+    build: 
+      context: .
+      dockerfile: server.Dockerfile
+    ports:
+      - "50051:50051"
+    volumes:
+      # This maps your local folders directly into the container
+      - ./server:/app/server
+      - ./proto:/app/proto
+      - ./keys:/app/keys
+    working_dir: /app
+
+  tesla-model-s:
+    build:
+      context: .
+      dockerfile: client.Dockerfile
+    environment:
+      - DEVICE_ID=TSLA-999
+      - SERVER_HOST=cloud-server:50051
+    depends_on:
+      - cloud-server
+
+  rivian-r1t:
+    build:
+      context: .
+      dockerfile: client.Dockerfile
+    environment:
+      - DEVICE_ID=RIVN-404
+      - SERVER_HOST=cloud-server:50051
+    depends_on:
+      - cloud-server
+
+  ford-mustang-mach-e:
+    build:
+      context: .
+      dockerfile: client.Dockerfile
+    environment:
+      - DEVICE_ID=FORD-101
+      - SERVER_HOST=cloud-server:50051
+    depends_on:
+      - cloud-server

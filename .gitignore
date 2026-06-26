@@ -1,0 +1,21 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# C++ Build Artifacts
+client/build/
+client/CMakeCache.txt
+client/CMakeFiles/
+
+# Databases & Firmware
+server/src/fleet.db
+server/firmware/
+
+# Security Keys (CRITICAL)
+keys/
+certs/
+
+# OS/IDE
+.vscode/
+.DS_Store
