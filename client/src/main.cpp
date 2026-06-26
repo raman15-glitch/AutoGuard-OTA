@@ -13,6 +13,7 @@
 #include <openssl/err.h>
 
 #include "ota.grpc.pb.h"
+#include "partition_manager.h"
 
 using grpc::Channel;
 using grpc::ClientContext;
@@ -166,11 +167,21 @@ public:
 
             if (is_valid) {
                 std::cout << "\n[SUCCESS] SIGNATURE MATCHED! Firmware is trusted." << std::endl;
-                if(std::rename(temp_file.c_str(),"active_firware.bin") == 0){
-                    std::cout<< "[System] partition swapped successfully." << std::endl;
-                }
-                else{
-                    std::cout<< "[Error] Failed to install firmware to acitve partition." << std::endl;
+    
+                // 1. Instantiate the manager
+                PartitionManager pm;
+
+                // 2. Flash to the inactive slot and handle the commit
+                // Pass the temp_file which contains the newly downloaded/verified binary
+                if (pm.FlashToInactive(temp_file)) {
+                    if (pm.BootAndCommit()) {
+                        std::cout << "[System] Partition swap completed successfully via PartitionManager." << std::endl;
+                    } else {
+                        // If BootAndCommit fails, Rollback is automatically triggered inside the method
+                        std::cerr << "[CRITICAL] Partition swap failed. Rollback successful, running on stable bank." << std::endl;
+                    }
+                } else {
+                    std::cerr << "[Error] Failed to flash new firmware to inactive bank." << std::endl;
                 }
             } else {
                 std::cout << "\n[CRITICAL WARNING] SIGNATURE MISMATCH! File may be tampered." << std::endl;

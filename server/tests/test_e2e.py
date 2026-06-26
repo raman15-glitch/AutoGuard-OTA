@@ -58,7 +58,7 @@ def test_ota_end_to_end_success():
     assert "Resuming from byte" in output, "Client failed to resume the partial download."
     assert "[Security] Checksum valid" in output, "SHA-256 Integrity check failed."
     assert "[SUCCESS] SIGNATURE MATCHED!" in output, "RSA Authenticity check failed."
-    assert "partition swapped successfully" in output, "System failed to apply the update."
+    assert "Partition swap completed successfully" in output, "System failed to apply the update."
     
     # Ensure it didn't crash
     assert result2.returncode == 0, "C++ client exited with a crash code."
