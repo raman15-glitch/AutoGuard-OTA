@@ -41,10 +41,18 @@ jobs:
 
     - name: Compile C++ Edge Client
       run: |
+        echo "--- WHAT FILES ARE ON THIS SERVER? ---"
+        ls -la
+        
+        echo "--- ENTERING CLIENT DIRECTORY ---"
         cd client
         mkdir -p build
         cd build
-        cmake ..
+        
+        echo "--- RUNNING CMAKE ---"
+        cmake -DCMAKE_PREFIX_PATH=/usr ..
+        
+        echo "--- COMPILING ---"
         make
 
     - name: Run Integration Tests
