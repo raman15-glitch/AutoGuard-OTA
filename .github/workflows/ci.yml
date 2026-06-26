@@ -43,15 +43,12 @@ jobs:
       run: |
         echo "--- WHAT FILES ARE ON THIS SERVER? ---"
         ls -la
-        
         echo "--- ENTERING CLIENT DIRECTORY ---"
         cd client
         mkdir -p build
         cd build
-        
         echo "--- RUNNING CMAKE ---"
         cmake -DCMAKE_PREFIX_PATH=/usr ..
-        
         echo "--- COMPILING ---"
         make
 
