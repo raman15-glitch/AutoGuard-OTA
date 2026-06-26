@@ -31,13 +31,19 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r server/requirements.txt
 
-    - name: Generate Ephemeral TLS Certificates
+    - name: Generate Ephemeral TLS and RSA Keys
       run: |
         mkdir -p keys
+        
+        # 1. Generate TLS Certificates for gRPC connection
         openssl req -x509 -newkey rsa:4096 -nodes -days 365 \
           -keyout keys/server.key \
           -out keys/server.crt \
           -subj "/CN=localhost"
+          
+        # 2. Generate RSA Keypair for Firmware Signing
+        openssl genrsa -out keys/private.pem 2048
+        openssl rsa -in keys/private.pem -outform PEM -pubout -out keys/public.pem
 
     - name: Compile C++ Edge Client
       run: |
