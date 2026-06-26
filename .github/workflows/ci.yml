@@ -45,6 +45,13 @@ jobs:
         openssl genrsa -out keys/private.pem 2048
         openssl rsa -in keys/private.pem -outform PEM -pubout -out keys/public.pem
 
+    - name: Generate Mock Firmware Payloads
+      run: |
+        mkdir -p server/firmware
+        # Generate 10MB dummy firmware files using random bytes
+        head -c 10485760 </dev/urandom > server/firmware/v2.0.bin
+        head -c 10485760 </dev/urandom > server/firmware/v3.0.bin
+
     - name: Compile C++ Edge Client
       run: |
         echo "--- WHAT FILES ARE ON THIS SERVER? ---"
